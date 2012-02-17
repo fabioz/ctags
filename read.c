@@ -259,8 +259,13 @@ extern boolean fileOpen (const char *const fileName, const langType language)
 		fclose (File.fp);  /* close any open source file */
 		File.fp = NULL;
 	}
+	
+	if (Option.stdinFileName) {
+	  File.fp = stdin;
+	} else {
+	  File.fp = fopen (fileName, openMode);
+	}
 
-	File.fp = fopen (fileName, openMode);
 	if (File.fp == NULL)
 		error (WARNING | PERROR, "cannot open \"%s\"", fileName);
 	else

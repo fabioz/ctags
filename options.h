@@ -109,6 +109,7 @@ typedef struct sOptionValues {
 	boolean tagRelative;    /* --tag-relative file paths relative to tag file */
 	boolean printTotals;    /* --totals  print cumulative statistics */
 	boolean lineDirectives; /* --linedirectives  process #line directives */
+	char* stdinFileName;    /* --from-stdin  use this as the filename and get the file content from stdin */
 #ifdef DEBUG
 	long debugLevel;        /* -D  debugging output */
 	unsigned long breakLine;/* -b  source line at which to call lineBreak() */

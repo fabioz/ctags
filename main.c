@@ -293,7 +293,7 @@ static boolean createTagsForEntry (const char *const entryName)
 		verbose ("excluding \"%s\"\n", entryName);
 	else if (status->isSymbolicLink  &&  ! Option.followLinks)
 		verbose ("ignoring \"%s\" (symbolic link)\n", entryName);
-	else if (! status->exists)
+	else if (! status->exists && ! Option.stdinFileName)
 		error (WARNING | PERROR, "cannot open source file \"%s\"", entryName);
 	else if (status->isDirectory)
 		resize = recurseIntoDirectory (entryName);
@@ -478,7 +478,7 @@ static void makeTags (cookedArgs *args)
 		if (filesRequired ())
 			error (FATAL, "No files specified. Try \"%s --help\".",
 				getExecutableName ());
-		else if (! Option.recurse && ! etagsInclude ())
+		else if (! Option.recurse && ! Option.stdinFileName && ! etagsInclude ())
 			return;
 	}
 
@@ -505,6 +505,11 @@ static void makeTags (cookedArgs *args)
 	}
 	if (! files  &&  Option.recurse)
 		resize = recurseIntoDirectory (".");
+	
+	if (Option.stdinFileName)
+	{
+	  resize = createTagsForEntry(Option.stdinFileName);
+	}
 
 	timeStamp (1);
 
