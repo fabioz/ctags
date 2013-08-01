@@ -150,7 +150,8 @@ optionValues Option = {
 	FALSE,      /* --tag-relative */
 	FALSE,      /* --totals */
 	FALSE,      /* --line-directives */
-#ifdef DEBUG
+	FALSE,      /* --line-directives */
+#ifdef DEBUG    /* -f */
 	0, 0        /* -D, -b */
 #endif
 };
@@ -491,7 +492,7 @@ extern void setDefaultTagFileName (void)
 extern boolean filesRequired (void)
 {
 	boolean result = FilesRequired;
-	if (Option.recurse)
+	if (Option.recurse || Option.readStdin)
 		result = FALSE;
 	return result;
 }
@@ -1662,6 +1663,9 @@ static void processShortOption (
 			break;
 		case 'F':
 			Option.backward = FALSE;
+			break;
+		case 's':
+			Option.readStdin = TRUE;
 			break;
 		case 'h':
 			processHeaderListOption (*option, parameter);

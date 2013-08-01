@@ -289,7 +289,12 @@ static boolean createTagsForEntry (const char *const entryName)
 	fileStatus *status = eStat (entryName);
 
 	Assert (entryName != NULL);
-	if (isExcludedFile (entryName))
+    if (strcmp(entryName, "-") == 0)
+    {
+        verbose("Reading from standard input..\n");
+        resize = parseFile("-");
+    }
+	else if (isExcludedFile (entryName))
 		verbose ("excluding \"%s\"\n", entryName);
 	else if (status->isSymbolicLink  &&  ! Option.followLinks)
 		verbose ("ignoring \"%s\" (symbolic link)\n", entryName);
@@ -488,6 +493,11 @@ static void makeTags (cookedArgs *args)
 
 	timeStamp (0);
 
+    if (Option.readStdin)
+    {
+        verbose("Creating tags from standard input..\n");
+        resize = createTagsForEntry("-");
+    }
 	if (! cArgOff (args))
 	{
 		verbose ("Reading command line arguments\n");

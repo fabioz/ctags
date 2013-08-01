@@ -260,7 +260,12 @@ extern boolean fileOpen (const char *const fileName, const langType language)
 		File.fp = NULL;
 	}
 
-	File.fp = fopen (fileName, openMode);
+	if (strcmp(fileName, "-") == 0){
+        File.fp = stdin;
+		setvbuf(stdin,NULL,_IONBF,0);
+    }else
+		File.fp = fopen (fileName, openMode);
+		
 	if (File.fp == NULL)
 		error (WARNING | PERROR, "cannot open \"%s\"", fileName);
 	else
@@ -550,8 +555,9 @@ extern char *readSourceLine (
 
 	fgetpos (File.fp, &orignalPosition);
 	fsetpos (File.fp, &location);
-	if (pSeekValue != NULL)
+	if (pSeekValue != NULL){
 		*pSeekValue = ftell (File.fp);
+	}
 	result = readLine (vLine, File.fp);
 	if (result == NULL)
 		error (FATAL, "Unexpected end of file: %s", vStringValue (File.name));
